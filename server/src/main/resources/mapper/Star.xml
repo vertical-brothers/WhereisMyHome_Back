@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.apartment.model.mapper.StarMapper">
+
+	<resultMap type="starDto" id="star">
+		<result column="star_no" property="starNo"/>
+		<result column="dongCode" property="dongCode"/>
+		<result column="dealYM" property="dealYM"/>
+		<result column="user_id" property="userId"/>
+		<result column="sidoName" property="sidoName"/>
+		<result column="gugunName" property="gugunName"/>
+		<result column="dongName" property="dongName"/>
+	</resultMap>
+	
+	<select id="listStar" parameterType="String" resultMap="star">
+		select s.star_no, d.dongCode, s.dealYM, s.user_id, d.sidoName, d.gugunName, d.dongName
+		from dongcode d join star s
+		on d.dongCode = s.dongCode
+		where s.user_id = #{userId}
+	</select>
+	
+	<insert id="addStar" parameterType="map">
+	insert into star (user_id, dongCode, dealYM)
+	values(#{userId},#{dongCode},#{dealYM})
+	</insert>
+	
+	<delete id="deleteStar" parameterType="int">
+	delete from star
+	where star_no=#{starNo}
+	</delete>
+</mapper>

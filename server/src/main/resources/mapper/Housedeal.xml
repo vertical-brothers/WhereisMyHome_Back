@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.apartment.model.mapper.HousedealMapper">
+
+	<resultMap type="HouseDealDto" id="housedeal">
+		<result column="no" property="no"/>
+		<result column="dealAmount" property="dealAmount"/>
+		<result column="dealYear" property="dealYear"/>
+		<result column="dealMonth" property="dealMonth"/>
+		<result column="dealDay" property="dealDay"/>
+		<result column="area" property="area"/>
+		<result column="floor" property="floor"/>
+		<result column="aptCode" property="aptCode"/>
+		<result column="aptName" property="aptName"/>
+		<result column="dongName" property="dongName"/>
+		<result column="roadName" property="roadName"/>
+		<result column="roadNamebonbun" property="roadNamebonbun"/>
+	</resultMap>
+	
+	<select id="list" resultMap="housedeal">
+		select no, dealAmount, dealYear, dealMonth, dealDay, area, floor, aptCode
+		from housedeal order by no
+	</select>
+	
+	<select id="listAll" parameterType="map" resultMap="housedeal">
+		select hd.no, hd.dealAmount, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area
+		      , hd.floor, hd.aptCode, hi.apartmentName as aptName, d.dongName
+		      ,hi.roadName, hi.roadNamebonbun
+		  from housedeal as hd
+		  join houseinfo as hi on hd.aptCode=hi.aptCode
+		  join dongcode d on hi.dongCode = d.dongCode
+		  where hi.dongCode = #{dongCode}
+		    and hi.apartmentName like concat('%', #{apartmentName}, '%')
+		    and hd.dealYear = '2022'
+		  order by d.dongName, hi.apartmentName
+	</select>
+
+</mapper>

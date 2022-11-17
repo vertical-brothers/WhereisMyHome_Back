@@ -1,4 +1,4 @@
-package com.ssafy.house.controller;
+package com.ssafy.apartment.controller;
 
 /*
  * 아파트정보 Controller

@@ -49,8 +49,6 @@ import io.swagger.annotations.ApiOperation;
 public class HouseController {
 
 	private final Logger logger = LoggerFactory.getLogger(HouseController.class);
-	private static final String SUCCESS = "success";
-	private static final String FAIL = "fail";
 	private final HouseService houseService;
 	
 	@Autowired

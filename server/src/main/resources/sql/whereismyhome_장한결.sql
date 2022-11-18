@@ -10,10 +10,16 @@ select hd.no, hd.dealAmount, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area
 		    and hi.apartmentName like concat('%', '청운', '%')
 		    and hd.dealYear = '2020'
 		  order by d.dongName, hi.apartmentName;
+          
+# 아파트코드로 거래정보 검색
+select no, dealAmount, dealYear, dealMonth, dealDay, area, floor, cancelDealType, aptCode
+from housedeal
+where aptCode='11110000000002'
+order by dealYear, dealMonth;
 
-select * from houseinfo limit 1,10;
-select * from housedeal limit 1,10;
-select * from dongcode limit 1,10;
+-- select * from houseinfo limit 1,10;
+-- select * from housedeal limit 1,10;
+-- select * from dongcode limit 1,10;
 
 # HouseDTO 기본 틀
 select aptCode, buildYear, roadName, roadNameBonbun, dong, dongCode,  apartmentName, lng, lat from houseinfo limit 1,10;
@@ -23,9 +29,19 @@ select aptCode, buildYear, roadName, roadNameBonbun, dong, dongCode,  apartmentN
 from houseinfo
 where aptCode='11110000000002';
 
-select aptCode, buildYear, roadName, roadNameBonbun, dong, dongCode,  apartmentName, lng, lat 
-from houseinfo
-where aptCode='11110000000002';
+# HouseDTO 동코드검색
+select aptCode, buildYear, 
+		roadName, roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where dongCode='1111011500';
+
+# HouseDTO 동 이름 검색
+select aptCode, buildYear, 
+		roadName, roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where dong like concat('%', '사직', '%');
 
 
 

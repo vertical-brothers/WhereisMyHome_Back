@@ -12,4 +12,5 @@ import com.ssafy.apartment.model.HouseDealDto;
 public interface HousedealMapper {
 	List<HouseDealDto> list() throws SQLException;
     List<HouseDealDto> listAll(Map<String, String> map) throws SQLException;
+    List<HouseDealDto> searchByAptcode(String aptCode) throws SQLException;
 }

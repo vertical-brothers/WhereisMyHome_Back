@@ -33,6 +33,18 @@ public class HouseDealDto {
 		this.roadName = roadName;
 		this.roadNamebonbun = roadNamebonbun;
 	}
+	public HouseDealDto(String no, String aptCode, String dealAmount, String dealYear, String dealMonth, String dealDay,
+			String area, String floor) {
+		super();
+		this.no = no;
+		this.aptCode = aptCode;
+		this.dealAmount = dealAmount;
+		this.dealYear = dealYear;
+		this.dealMonth = dealMonth;
+		this.dealDay = dealDay;
+		this.area = area;
+		this.floor = floor;
+	}
 	public String getNo() {
 		return no;
 	}

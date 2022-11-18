@@ -30,5 +30,10 @@ public class HousedealServiceImpl implements HousedealService{
 		return housedealMapper.listAll(map);
 	}
 
+	@Override
+	public List<HouseDealDto> searchByAptcode(String aptCode) throws Exception {
+		return housedealMapper.searchByAptcode(aptCode);
+	}
+
 	
 }

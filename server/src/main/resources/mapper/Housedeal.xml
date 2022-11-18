@@ -36,5 +36,12 @@
 		    and hd.dealYear = '2022'
 		  order by d.dongName, hi.apartmentName
 	</select>
+	
+	<select id="searchByAptcode" parameterType="String" resultMap="housedeal">
+		select no, dealAmount, dealYear, dealMonth, dealDay, area, floor, aptCode
+		from housedeal
+		where aptCode=#{aptCode}
+		order by dealYear, dealMonth;
+	</select>
 
 </mapper>

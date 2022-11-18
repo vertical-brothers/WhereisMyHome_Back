@@ -9,4 +9,5 @@ public interface HousedealService {
 
 	List<HouseDealDto> list() throws Exception;
     List<HouseDealDto> listAll(Map<String, String> map) throws Exception;
+    List<HouseDealDto> searchByAptcode(String aptCode) throws Exception;
 }

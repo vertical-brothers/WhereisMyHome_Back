@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 import javax.servlet.http.Cookie;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jwt.service.JwtService;
 import com.ssafy.member.model.MemberDto;
@@ -34,7 +36,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 @Api("사용자 REST 컨트롤러 API v1")
 public class MemberController {
@@ -50,8 +52,7 @@ public class MemberController {
 	private static final String FAIL = "fail";
 	
 	@ApiOperation(value = "아이디 체크", notes ="회원가입시사용가능한 아이디인지 확인한다.")
-	@GetMapping("/{userid}")
-	@ResponseBody
+	@GetMapping("/join/{userid}")
 	public ResponseEntity<Void> idCheck(@PathVariable("userid") String userId) throws Exception {
 		logger.debug("idCheck userid : {}", userId);
 		int cnt = memberService.idCheck(userId);
@@ -72,7 +73,6 @@ public class MemberController {
 	*/
 	@ApiOperation(value = "아이디 회원가입", notes ="사용자 회원가입 API")
 	@PostMapping
-	@ResponseBody
 	public ResponseEntity<Void> join(@RequestBody MemberDto memberDto) throws Exception{
 		logger.debug("memberDto info : {}", memberDto);
 			memberService.joinMember(memberDto);
@@ -118,14 +118,58 @@ public class MemberController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
+	
+	@ApiOperation(value = "로그아웃", notes = "회원 정보를 담은 Token을 제거한다.", response = Map.class)
+	@GetMapping("/logout/{userid}")
+	public ResponseEntity<?> removeToken(@PathVariable("userid") String userid) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleRefreshToken(userid);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
 	}
 
-	@GetMapping("/list")
+	@ApiOperation(value = "회원인증", notes = "회원 정보를 담은 Token을 반환한다.", response = Map.class)
+	@GetMapping("/{userid}")
+	public ResponseEntity<Map<String, Object>> getInfo(
+			@PathVariable("userid") @ApiParam(value = "인증할 회원의 아이디.", required = true) String userid,
+			@RequestHeader("Authorization") final String header) {
+//		logger.debug("userid : {} ", userid);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		if (jwtService.checkToken(header)) {
+			logger.info("사용 가능한 토큰!!!");
+			try {
+//				로그인 사용자 정보.
+//				MemberDto memberDto = memberService.user(userid);
+//				resultMap.put("userInfo", memberDto);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+			} catch (Exception e) {
+				logger.error("정보조회 실패 : {}", e);
+				resultMap.put("message", e.getMessage());
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+		} else {
+			logger.error("사용 불가능 토큰!!!");
+			resultMap.put("message", FAIL);
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	
+	@ApiOperation(value = "회원 리스트 반환", notes = "회원 리스트를 반환한다.")
+	@GetMapping()
 	public String list(Model model) {
 		try {
 			model.addAttribute("users",memberService.listMember());
@@ -163,4 +207,11 @@ public class MemberController {
 		}
 	}
 
+	
+	@GetMapping("/test")
+	public ResponseEntity<Void> test(@RequestHeader("Authorization") final String header) {
+		jwtService.checkToken(header);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 }

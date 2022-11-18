@@ -13,7 +13,7 @@ import com.ssafy.member.model.MemberDto;
 public interface MemberMapper {
 	int idCheck(String userId) throws SQLException; // 아이디 중복검사
 	void joinMember(MemberDto memberDto) throws SQLException; // 회원가입
-	MemberDto loginMember(Map<String, String> map) throws SQLException; // 로그인
+	MemberDto login(MemberDto memberDto) throws SQLException; // 로그인
 	MemberDto getMember(String userId) throws SQLException;
 	void deleteMember(String userId) throws SQLException;
 	void updateMember(MemberDto memberDto) throws SQLException;

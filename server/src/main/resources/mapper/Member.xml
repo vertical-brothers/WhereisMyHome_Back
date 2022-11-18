@@ -7,6 +7,7 @@
 	<resultMap type="memberDto" id="member">
 		<result column="user_id" property="userId"/>
 		<result column="user_name" property="userName"/>
+		<result column="user_role" property="userRole"/>
 	</resultMap>
 	
 	<resultMap type="memberDto" id="memberAll" extends="member">
@@ -27,7 +28,7 @@
 		values (#{userId}, #{userName}, md5(#{userPwd}), #{userEmail}, #{userPhone}, #{userRole})
 	</insert>
 
-	<select id="loginMember" parameterType="map" resultMap="memberAll ">
+	<select id="login" parameterType="memberDto" resultMap="member">
 		select user_id, user_name, user_role
 		from members
 		where user_id = #{userId} and user_password = md5(#{userPwd})

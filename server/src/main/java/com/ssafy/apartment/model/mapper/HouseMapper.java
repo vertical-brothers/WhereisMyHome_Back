@@ -13,4 +13,5 @@ public interface HouseMapper {
     HouseDto searchByAptcode(String aptCode) throws SQLException;
     List<HouseDto> searchByDongCode(String dongCode) throws SQLException;
     List<HouseDto> searchByAptName(String apartmentName) throws SQLException;
+	List<HouseDto> searchByDongName(String dongName) throws SQLException;
 }

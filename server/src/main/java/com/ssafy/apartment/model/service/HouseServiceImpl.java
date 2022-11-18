@@ -37,4 +37,10 @@ public class HouseServiceImpl implements HouseService {
 		return houseMapper.searchByAptName(apartmentName);
 	}
 
+	@Override
+	public List<HouseDto> searchByDongName(String dongName) throws SQLException {
+		// TODO Auto-generated method stub
+		return houseMapper.searchByDongName(dongName);
+	}
+
 }

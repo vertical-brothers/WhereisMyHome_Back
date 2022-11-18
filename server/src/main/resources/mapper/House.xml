@@ -40,7 +40,7 @@
 		roadNameBonbun, dong, dongCode,  
 		apartmentName, lng, lat 
 		from houseinfo
-		where apartmentName like concat('%', #{apartmentName}, '%');
+		where apartmentName like concat('%', #{apartmentName}, '%')
 	</select>
 	<!-- 동코드로 조회하는 SQL -->
 	<!-- 파라미터 
@@ -54,6 +54,20 @@
 		roadName, roadNameBonbun, dong, dongCode,  
 		apartmentName, lng, lat 
 		from houseinfo
-		where dongCode=#{dongCode};
+		where dongCode=#{dongCode}
+	</select>
+	<!-- 동 이름으로 조회하는 SQL -->
+	<!-- 파라미터 
+		String : dongName
+	-->
+	<!-- 리턴
+		HouseDto (List)
+	 -->
+	<select id="searchByDongName" parameterType="String" resultMap="house">
+		select aptCode, buildYear, 
+		roadName, roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where dong like concat('%', #{dongName}, '%')
 	</select>
 </mapper>

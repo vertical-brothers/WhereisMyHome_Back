@@ -67,7 +67,7 @@ public class HouseController {
 	 * return
 	 * HouseDto
 	 * */
-	@ApiOperation(value = "아파트 정보", notes = "아파트 코드로 아파트 정보 호출.", response = List.class)
+	@ApiOperation(value = "아파트 코드로 찾기", notes = "아파트 코드로 아파트 정보 호출.", response = List.class)
 	@GetMapping(value="/code/{aptCode}")
 	private ResponseEntity<HouseDto> searchByAptcode(@PathVariable String aptCode) throws Exception {
 		logger.debug("searchByAptcode call, aptCode : {}", aptCode);
@@ -85,7 +85,7 @@ public class HouseController {
 	 * return
 	 * List<HouseDto>
 	 * */
-	@ApiOperation(value = "아파트 정보", notes = "아파트 이름으로 아파트 정보 호출.", response = List.class)
+	@ApiOperation(value = "아파트 리스트 (아파트명)", notes = "아파트 이름으로 아파트 정보 호출.", response = List.class)
 	@GetMapping(value="/name/{apartmentName}")
 	private ResponseEntity<List<HouseDto>> searchByAptName(@PathVariable String apartmentName) throws Exception {
 		logger.debug("searchByAptName call, aptCode : {}", apartmentName);
@@ -97,7 +97,30 @@ public class HouseController {
 			return new ResponseEntity<List<HouseDto>>(list, HttpStatus.OK);
 		}
 	}
-		
+	
+	// 아파트 동 이름으로로 아파트 정보 조회
+	// 22.11.18 장한결
+	/*
+	 * argument
+	 * String : dongName (동이름)
+	 * 
+	 * return
+	 * List<HouseDto>
+	 * 
+	 * */
+	@ApiOperation(value = "아파트 리스트 (동 이름)", notes = "동이름으로 아파트 정보 호출.", response = List.class)
+	@GetMapping(value="/dongName/{dongName}")
+	private ResponseEntity<List<HouseDto>> searchByDongName(@PathVariable String dongName) throws Exception {
+		logger.debug("searchByDongName call, dongCode : {}", dongName);
+		List<HouseDto> list = houseService.searchByDongName(dongName);
+		logger.debug("searchByDongName result, HouseList : {}", dongName);
+		if(list.size() == 0) {
+			return new ResponseEntity<List<HouseDto>>(list, HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<List<HouseDto>>(list, HttpStatus.OK);
+		}
+	}
+	
 	// 아파트 동코드로 아파트 정보 조회
 	// 22.11.17 장한결
 	/*
@@ -107,7 +130,7 @@ public class HouseController {
 	 * return
 	 * List<HouseDto>
 	 * */
-	@ApiOperation(value = "아파트 정보", notes = "동코드로 아파트 정보 호출.", response = List.class)
+	@ApiOperation(value = "아파트 리스트 (동 코드)", notes = "동코드로 아파트 정보 모두 호출.", response = List.class)
 	@GetMapping(value="/dongCode/{dongCode}")
 	private ResponseEntity<List<HouseDto>> searchByDongcode(@PathVariable String dongCode) throws Exception {
 		logger.debug("searchByDongcode call, dongCode : {}", dongCode);

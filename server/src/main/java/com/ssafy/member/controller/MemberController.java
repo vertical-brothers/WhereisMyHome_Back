@@ -1,6 +1,7 @@
 package com.ssafy.member.controller;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -31,6 +32,7 @@ import com.ssafy.member.model.service.MemberService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Controller
 @RequestMapping("/user")
@@ -44,11 +46,9 @@ public class MemberController {
 	@Autowired
 	private  JwtService jwtService;
 
-//	@GetMapping("/join")
-//	public String join() {
-//		return "user/join";
-//	}
-
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	
 	@ApiOperation(value = "아이디 체크", notes ="회원가입시사용가능한 아이디인지 확인한다.")
 	@GetMapping("/{userid}")
 	@ResponseBody
@@ -71,7 +71,7 @@ public class MemberController {
 	userrole : 역할
 	*/
 	@ApiOperation(value = "아이디 회원가입", notes ="사용자 회원가입 API")
-	@PostMapping()
+	@PostMapping
 	@ResponseBody
 	public ResponseEntity<Void> join(@RequestBody MemberDto memberDto) throws Exception{
 		logger.debug("memberDto info : {}", memberDto);
@@ -87,35 +87,36 @@ public class MemberController {
 		
 	}
 
+	@ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
 	@PostMapping("/login")
-	public String login(@RequestParam Map<String, String> map, Model model, HttpSession session, HttpServletResponse response) {
-		logger.debug("map : {}", map.get("userid"));
+	public ResponseEntity<?> login(@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).",required = true) MemberDto memberDto) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
 		try {
-			MemberDto memberDto = memberService.loginMember(map);
-			logger.debug("memberDto : {}", memberDto);
-			if(memberDto != null) {
-				session.setAttribute("userinfo", memberDto);
-
-				Cookie cookie = new Cookie("ssafy_id", map.get("userid"));
-				cookie.setPath("/board");
-				if("ok".equals(map.get("saveid"))) {
-					cookie.setMaxAge(60*60*24*365*40);
-				} else {
-					cookie.setMaxAge(0);
-				}
-				response.addCookie(cookie);
-				logger.debug("userrole : {}", memberDto.getUserRole());
-
-				return "index";
+			logger.debug("input  info is {}", memberDto);
+			MemberDto loginUser = memberService.login(memberDto);
+			logger.debug("login user info is {}", loginUser);
+			if (loginUser != null) {
+				
+				String accessToken = jwtService.createAccessToken("userid", loginUser.getUserId());// key, data
+				String refreshToken = jwtService.createRefreshToken("userid", loginUser.getUserId());// key, data
+				memberService.saveRefreshToken(memberDto.getUserId(), refreshToken);
+				logger.debug("로그인 accessToken 정보 : {}", accessToken);
+				logger.debug("로그인 refreshToken 정보 : {}", refreshToken);
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
 			} else {
-				model.addAttribute("msg", "아이디 또는 비밀번호 확인 후 다시 로그인하세요!");
-				return "user/login";
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("msg", "로그인 중 문제 발생!!!");
-			return "error/error";
+			logger.error("로그인 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
 	@GetMapping("/logout")

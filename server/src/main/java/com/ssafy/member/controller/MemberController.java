@@ -1,16 +1,11 @@
 package com.ssafy.member.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -25,58 +20,71 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ssafy.board.model.BoardDto;
+import com.ssafy.jwt.service.JwtService;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.service.MemberService;
-import com.ssafy.member.model.service.MemberServiceImpl;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("/user")
+@Api("사용자 REST 컨트롤러 API v1")
 public class MemberController {
 
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
-	private final MemberService memberService;
-
 	@Autowired
-	public MemberController(MemberService memberService) {
-		logger.info("MemberController 생성자 호출!!");
-		this.memberService = memberService;
-	}
+	private  MemberService memberService;
+	@Autowired
+	private  JwtService jwtService;
 
-	@GetMapping("/join")
-	public String join() {
-		return "user/join";
-	}
+//	@GetMapping("/join")
+//	public String join() {
+//		return "user/join";
+//	}
 
-	@GetMapping("/idcheck/{userid}")
+	@ApiOperation(value = "아이디 체크", notes ="회원가입시사용가능한 아이디인지 확인한다.")
+	@GetMapping("/{userid}")
 	@ResponseBody
-	public String idCheck(@PathVariable("userid") String userId) throws Exception {
+	public ResponseEntity<Void> idCheck(@PathVariable("userid") String userId) throws Exception {
 		logger.debug("idCheck userid : {}", userId);
 		int cnt = memberService.idCheck(userId);
-		return cnt + "";
-	}
-
-	@PostMapping("/join")
-	public String join(MemberDto memberDto, Model model) {
-		logger.debug("memberDto info : {}", memberDto);
-		try {
-			memberService.joinMember(memberDto);
-			return "redirect:/user/login";
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("msg", "회원 가입 중 문제 발생!!!");
-			return "error/error";
+		if(cnt == 0) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
+		return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 	}
 
-	@GetMapping("/login")
-	public String login() {
-		return "user/login";
+	/*
+	입력으로 들어오는 body의 parameter는 다음과 같다.
+	userid : 사용자 id
+	username : 사용자 이름
+	userpwd : 비밀번호
+	useremail : 사용자 email
+	userphone : 사용자 전화번호
+	userrole : 역할
+	*/
+	@ApiOperation(value = "아이디 회원가입", notes ="사용자 회원가입 API")
+	@PostMapping()
+	@ResponseBody
+	public ResponseEntity<Void> join(@RequestBody MemberDto memberDto) throws Exception{
+		logger.debug("memberDto info : {}", memberDto);
+			memberService.joinMember(memberDto);
+			logger.debug("회원가입정보 : {}", memberDto);
+			
+			String refreshToken = jwtService.createRefreshToken("userid", memberDto.getUserId());
+			logger.debug("refresh token info : {}", refreshToken);
+			memberService.saveRefreshToken(memberDto.getUserId(), refreshToken);
+			logger.debug("회 refreshToken 정보 : {}", refreshToken);
+			ResponseEntity<Void> result = new ResponseEntity<Void>(HttpStatus.CREATED);
+			return result;
+		
 	}
 
 	@PostMapping("/login")

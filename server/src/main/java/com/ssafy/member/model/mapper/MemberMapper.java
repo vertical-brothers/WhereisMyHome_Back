@@ -18,4 +18,10 @@ public interface MemberMapper {
 	void deleteMember(String userId) throws SQLException;
 	void updateMember(MemberDto memberDto) throws SQLException;
 	List<MemberDto> listMember() throws SQLException;	
+	
+	// 토큰 관련 로직
+	public void saveRefreshToken(Map<String, String> map) throws SQLException;
+	public Object getRefreshToken(String userid) throws SQLException;
+	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
+	
 }

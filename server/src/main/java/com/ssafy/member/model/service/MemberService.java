@@ -14,4 +14,12 @@ public interface MemberService {
 	void deleteMember(String userId) throws Exception;
 	void updateMember(MemberDto memberDto) throws Exception;
 	List<MemberDto> listMember() throws Exception;	
+	
+	
+	// 토큰 저장 관련 service
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception;
+	public Object getRefreshToken(String userid) throws Exception;
+	public void deleRefreshToken(String userid) throws Exception;
+	
+	
 }

@@ -1,8 +1,10 @@
 package com.ssafy.member.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import com.ssafy.member.model.mapper.MemberMapper;
 public class MemberServiceImpl implements MemberService {
 
 	private MemberMapper memberMapper;
+	@Autowired
+	private SqlSession sqlSession;
 	
 	@Autowired
 	private MemberServiceImpl(MemberMapper memberMapper) {
@@ -52,5 +56,26 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<MemberDto> listMember() throws Exception {
 		return memberMapper.listMember();
+	}
+	
+	@Override
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userid);
+		map.put("token", refreshToken);
+		sqlSession.getMapper(MemberMapper.class).saveRefreshToken(map);
+	}
+
+	@Override
+	public Object getRefreshToken(String userid) throws Exception {
+		return sqlSession.getMapper(MemberMapper.class).getRefreshToken(userid);
+	}
+
+	@Override
+	public void deleRefreshToken(String userid) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("token", null);
+		sqlSession.getMapper(MemberMapper.class).deleteRefreshToken(map);
 	}
 }

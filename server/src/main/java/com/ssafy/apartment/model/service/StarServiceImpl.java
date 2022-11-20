@@ -36,6 +36,10 @@ public class StarServiceImpl implements StarService {
 	public void deleteStar(int starNo) throws Exception {
 		apartmentMapper.deleteStar(starNo);
 	}
+	@Override
+	public void addLog(String aptCode) throws Exception {
+		apartmentMapper.addLog(aptCode);
+	}
 	
 	
 }

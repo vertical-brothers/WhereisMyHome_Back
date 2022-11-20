@@ -30,4 +30,9 @@
 	delete from star
 	where star_no=#{starNo}
 	</delete>
+	
+	<insert id="addLog" parameterType="String">
+	insert into star_log (aptcode, log_date)
+	values (#{aptCode}, now())	
+	</insert>
 </mapper>

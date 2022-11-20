@@ -1,5 +1,6 @@
 package com.ssafy.board.model.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,4 +16,5 @@ public interface BoardService {
 	void deleteArticle(int articleNo) throws Exception;
 	int totalArticleCount(Map<String, String> map) throws Exception;
 	
+
 }

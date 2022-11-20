@@ -10,4 +10,7 @@ public interface StarService {
 	void addStar(Map<String, String> map) throws Exception;
 	List<StarDto> listStar(String userid) throws Exception;
 	void deleteStar(int starNo) throws Exception;
+	
+	/* 로그 수집 관련 service */
+	void addLog(String aptCode) throws Exception;
 }

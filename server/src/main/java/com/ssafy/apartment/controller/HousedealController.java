@@ -24,7 +24,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
-@RequestMapping(value = "/house")
+@RequestMapping(value = "/housedeal")
 @CrossOrigin("*")
 @Api("아파트 거래정보 관련 API")
 public class HousedealController {

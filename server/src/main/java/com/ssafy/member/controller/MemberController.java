@@ -18,10 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,14 +56,14 @@ public class MemberController {
 	private static final String FAIL = "fail";
 	
 	@ApiOperation(value = "아이디 체크", notes ="회원가입시사용가능한 아이디인지 확인한다.")
-	@GetMapping("/join/{userid}")
-	public ResponseEntity<Void> idCheck(@PathVariable("userid") String userId) throws Exception {
+	@GetMapping("/idcheck/{userid}")
+	public ResponseEntity<String> idCheck(@PathVariable("userid") String userId) throws Exception {
 		logger.debug("idCheck userid : {}", userId);
 		int cnt = memberService.idCheck(userId);
 		if(cnt == 0) {
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
-		return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		return new ResponseEntity<String>(FAIL, HttpStatus.CONFLICT);
 	}
 
 	/*
@@ -75,7 +77,7 @@ public class MemberController {
 	*/
 	@ApiOperation(value = "아이디 회원가입", notes ="사용자 회원가입 API")
 	@PostMapping
-	public ResponseEntity<Void> join(@RequestBody MemberDto memberDto) throws Exception{
+	public ResponseEntity<String> join(@RequestBody MemberDto memberDto) throws Exception{
 		logger.debug("memberDto info : {}", memberDto);
 			memberService.joinMember(memberDto);
 			logger.debug("회원가입정보 : {}", memberDto);
@@ -84,9 +86,46 @@ public class MemberController {
 			logger.debug("refresh token info : {}", refreshToken);
 			memberService.saveRefreshToken(memberDto.getUserId(), refreshToken);
 			logger.debug("회 refreshToken 정보 : {}", refreshToken);
-			ResponseEntity<Void> result = new ResponseEntity<Void>(HttpStatus.CREATED);
+			ResponseEntity<String> result = new ResponseEntity<String>(SUCCESS, HttpStatus.CREATED);
 			return result;
 		
+	}
+	
+	/*
+	 * 회원정보 수정 API
+	 * input : MemberDto
+	 * output : None
+	 * 
+	 * 22.11.20 장한결
+	 * 
+	 * */
+	@ApiOperation(value="회원정보 수정", notes="사용자 정보 수정 API")
+	@PutMapping
+	public ResponseEntity<String> updateUser(@RequestBody MemberDto memberDto) throws Exception{
+		logger.debug("memberDto info : {}", memberDto);
+			memberService.updateMember(memberDto);
+			logger.debug("회원정보 수정 API Call : {}", memberDto);
+			ResponseEntity<String> result = new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			return result;
+	}
+	
+	/*
+	 * 회원정보 삭제 API
+	 * input : userid
+	 * output : None
+	 * 
+	 * 실제로 회원정보 삭제하지 않고, userdel만 1로 변경
+	 * 
+	 * 22.11.20 장한결
+	 * 
+	 * */
+	@ApiOperation(value="회원정보 삭제", notes="사용자 정보 수정 API")
+	@DeleteMapping("/{userId}")
+	public ResponseEntity<String> deleteUser(@PathVariable String userId) throws Exception{
+		logger.debug("회원정보 삭제 API Call : {}", userId);
+		memberService.deleteMember(userId);
+		ResponseEntity<String> result = new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		return result;
 	}
 
 	@ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
@@ -211,19 +250,21 @@ public class MemberController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
-	@PostMapping("/update")
-	public String update(@ModelAttribute MemberDto member, Model model, HttpSession session) {		
-		try {
-			logger.debug("update : {}", member);
-			memberService.updateMember(member);
-			logger.debug("memberDto info : {}", member);
-			return "redirect:/user/info";
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("msg", "회원 정보 수정 중 문제 발생!!!");
-			return "error/error";
-		}
-	}
+//	@PostMapping("/update")
+//	public String update(@ModelAttribute MemberDto member, Model model, HttpSession session) {		
+//		try {
+//			logger.debug("update : {}", member);
+//			memberService.updateMember(member);
+//			logger.debug("memberDto info : {}", member);
+//			return "redirect:/user/info";
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			model.addAttribute("msg", "회원 정보 수정 중 문제 발생!!!");
+//			return "error/error";
+//		}
+//	}
+	
+	
 
 	
 	@GetMapping("/token/{userid}")

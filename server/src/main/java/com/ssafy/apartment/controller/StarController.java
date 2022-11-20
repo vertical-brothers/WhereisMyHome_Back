@@ -55,62 +55,6 @@ public class StarController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(StarController.class);
 	
-//	@PostMapping(value = "deletestar")
-//	private String deletestar(@RequestParam("starno") String starno, HttpSession session, Model model) {
-//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-//		logger.debug("ApartmentController  ! deletestar {}", starno);
-//		if(memberDto != null) {
-//			try {
-//				int starNo = Integer.parseInt(starno);
-//				starService.deleteStar(starNo);
-//				return "redirect:/star/liststar";
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				return "/error/error.jsp";
-//			}
-//		} else {
-//			return "/user/login";
-//		}
-//	}
-
-	@GetMapping(value="/liststar")
-	private String liststar(HttpSession session, Model model) {
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		System.out.println(memberDto.getUserId());
-			try {
-				List<StarDto> list = starService.listStar(memberDto.getUserId());
-				logger.debug("{}", list.size());
-				model.addAttribute("stars", list);
-				return "/apartment/liststar";
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "/user/login";
-			}
-	}
-
-//	@GetMapping(value = "/mvaptapi")
-//	public String mvaptapi(Model model) throws Exception {
-//		logger.debug("ApartmentController  ! mvaptapi  ");
-//		return "/apartment/aptapi";
-//	}
-	
-//	@PostMapping(value="/addstar")
-//	private String addstar(@RequestParam("dong") String dong) {
-//		Map<String, String> map = new HashMap<String, String>();
-//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-//		map.put("userId", memberDto.getUserId());
-//		map.put("dongCode", dong);
-//		map.put("dealYM", "");
-//		logger.debug("ApartmentController ! addstar {} ", map);
-//		try {
-//			starService.addStar(map);
-//			return "redirect:/star/liststar";
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return "/error/error";
-//		}
-//	}
-	
 	/*
 	 * 2022-11-20 이인재
 	 * 관심지역 추가 Api
@@ -212,14 +156,4 @@ public class StarController {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	// 테트용 api
-//	@GetMapping
-//	private ResponseEntity<?> test(@RequestHeader("access-token") final String header){
-//		logger.debug(header);
-//		Map<String, Object> tmp = jwtService.get(header);
-//		logger.debug("test value is {}", tmp);
-//		logger.debug(tmp.get("userid").toString());
-//		return new ResponseEntity<Void>(HttpStatus.OK);
-//	}
 }

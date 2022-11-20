@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.apartment.model.mapper.HouseMapper">
+	<resultMap type="HouseDto" id="house">
+		<result column="aptCode" property="aptCode"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="roadName" property="roadName"/>
+		<result column="roadNameBonbun" property="roadNameBonbun"/>
+		<result column="dong" property="dong"/>
+		<result column="dongCode" property="dongCode"/>
+		<result column="apartmentName" property="apartmentName"/>
+		<result column="lng" property="lng"/>
+		<result column="lat" property="lat"/>
+	</resultMap>
+	<!-- 아파트 코드로 조회하는 SQL -->
+	<!-- 파라미터 
+		String : aptCode
+	-->
+	<!-- 리턴
+		HouseDto (Single)
+	 -->
+	<select id="searchByAptcode" parameterType="String" resultMap="house">
+		select aptCode, buildYear, roadName, 
+		roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where aptCode=#{aptCode}
+	</select>
+	<!-- 아파트 이름으로 조회하는 SQL -->
+	<!-- 파라미터 
+		String : apartmentName
+	-->
+	<!-- 리턴
+		HouseDto (List)
+	 -->
+	<select id="searchByAptName" parameterType="String" resultMap="house">
+		select aptCode, buildYear, roadName, 
+		roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where apartmentName like concat('%', #{apartmentName}, '%')
+	</select>
+	<!-- 동코드로 조회하는 SQL -->
+	<!-- 파라미터 
+		String : dongCode
+	-->
+	<!-- 리턴
+		HouseDto (List)
+	 -->
+	<select id="searchByDongCode" parameterType="String" resultMap="house">
+		select aptCode, buildYear, 
+		roadName, roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where dongCode=#{dongCode}
+	</select>
+	<!-- 동 이름으로 조회하는 SQL -->
+	<!-- 파라미터 
+		String : dongName
+	-->
+	<!-- 리턴
+		HouseDto (List)
+	 -->
+	<select id="searchByDongName" parameterType="String" resultMap="house">
+		select aptCode, buildYear, 
+		roadName, roadNameBonbun, dong, dongCode,  
+		apartmentName, lng, lat 
+		from houseinfo
+		where dong like concat('%', #{dongName}, '%')
+	</select>
+</mapper>

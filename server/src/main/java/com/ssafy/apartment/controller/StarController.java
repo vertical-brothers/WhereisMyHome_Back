@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.apartment.model.StarDto;
 import com.ssafy.apartment.model.service.StarService;
@@ -37,7 +38,7 @@ import com.ssafy.member.model.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Controller
+@RestController
 @RequestMapping(value="/star")
 @Api("즐겨찾기/로그 (star/star_log) 관련 API")
 public class StarController {
@@ -54,23 +55,23 @@ public class StarController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(StarController.class);
 	
-	@PostMapping(value = "deletestar")
-	private String deletestar(@RequestParam("starno") String starno, HttpSession session, Model model) {
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		logger.debug("ApartmentController  ! deletestar {}", starno);
-		if(memberDto != null) {
-			try {
-				int starNo = Integer.parseInt(starno);
-				starService.deleteStar(starNo);
-				return "redirect:/star/liststar";
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "/error/error.jsp";
-			}
-		} else {
-			return "/user/login";
-		}
-	}
+//	@PostMapping(value = "deletestar")
+//	private String deletestar(@RequestParam("starno") String starno, HttpSession session, Model model) {
+//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+//		logger.debug("ApartmentController  ! deletestar {}", starno);
+//		if(memberDto != null) {
+//			try {
+//				int starNo = Integer.parseInt(starno);
+//				starService.deleteStar(starNo);
+//				return "redirect:/star/liststar";
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return "/error/error.jsp";
+//			}
+//		} else {
+//			return "/user/login";
+//		}
+//	}
 
 	@GetMapping(value="/liststar")
 	private String liststar(HttpSession session, Model model) {
@@ -119,7 +120,6 @@ public class StarController {
 	 * http://localhost:8080/whereismyhome/star/1111010100
 	 * */
 	@PostMapping("/{dong}")
-	@ResponseBody
 	@ApiOperation(value = "관심 지역추가", notes = "유저에게 해당 관심지역을 추가합니다.", response = Map.class)
 	private ResponseEntity<Map<String, Object>> addstar(@PathVariable String dong, @RequestHeader("access-token") final String header) {
 		// 토큰값 가져오기
@@ -148,6 +148,21 @@ public class StarController {
 	}
 	
 	
+	@GetMapping
+	@ApiOperation(value = "관심지역 조회", notes = "사용자가 추가한 관심지역을 조회합니다.", response = Map.class)
+	private ResponseEntity<?> getStar(@RequestHeader("access-token") final String header) throws Exception{
+		Map<String, Object> tokenValue = jwtService.get(header);
+		String userId = tokenValue.get("userid").toString();
+		
+		if(userId != null) {
+			List<StarDto> list = starService.listStar(userId);
+			logger.debug("{}", list.size());
+			return new ResponseEntity<List<StarDto>>(list, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<StarDto>>(HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
 	/*
 	 * 2022-11-20 이인재
 	 * 관심지역 삭 Api
@@ -157,7 +172,6 @@ public class StarController {
 	 * http://localhost:8080/whereismyhome/star
 	 * */
 	@DeleteMapping
-	@ResponseBody
 	@ApiOperation(value = "관심지역 삭제", notes = "해당 관심지을 삭제합니다.", response = Map.class)
 	private ResponseEntity<Map<String, Object>> deleteStar(@RequestBody Map<String, String> body, @RequestHeader("access-token") final String header) throws Exception{
 		// 토큰값 가져오기
@@ -199,12 +213,13 @@ public class StarController {
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@GetMapping
-	private ResponseEntity<?> test(@RequestHeader("access-token") final String header){
-		logger.debug(header);
-		Map<String, Object> tmp = jwtService.get(header);
-		logger.debug("test value is {}", tmp);
-		logger.debug(tmp.get("userid").toString());
-		return new ResponseEntity<Void>(HttpStatus.OK);
-	}
+	// 테트용 api
+//	@GetMapping
+//	private ResponseEntity<?> test(@RequestHeader("access-token") final String header){
+//		logger.debug(header);
+//		Map<String, Object> tmp = jwtService.get(header);
+//		logger.debug("test value is {}", tmp);
+//		logger.debug(tmp.get("userid").toString());
+//		return new ResponseEntity<Void>(HttpStatus.OK);
+//	}
 }

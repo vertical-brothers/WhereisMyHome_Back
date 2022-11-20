@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.apartment.model.mapper.ApartmentReviewMapper">
+
+	<resultMap type="apartmentReviewDto" id="review">
+		<result column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="aptCode" property="aptCode"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="date" property="date"/>
+		<result column="star1" property="star1"/>
+	</resultMap>
+
+	<!-- <sql id="search">
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and #{key} = #{word}
+			</if>
+		</if>
+	</sql> -->
+
+	<!-- 아파트 코드별 리뷰 검색.
+	input : aptCode
+	output : review List
+	 -->
+	<select id="showReviewByAptcode" parameterType="String" resultMap="review">
+		select id, aptCode, user_id, 
+		subject, content, 
+		date,star1 from apartmentreview 
+		where aptCode=#{aptCode};
+	</select>
+	<!-- 아파트 리뷰 작성.
+	input : apartmentReviewDto
+	 -->
+	<insert id="writeReview" parameterType="apartmentReviewDto">
+		insert into 
+		apartmentreview (aptCode, user_id, subject, content, date, star1) 
+		values(#{aptCode}, #{userId}, #{subject},#{content},now(),#{star1});
+	</insert>
+	
+	<delete id="deleteReview" parameterType="String">
+		delete from apartmentreview where id=#{id};
+	</delete>
+	<!-- 아파트 리뷰 업데이트.
+	input : apartmentReviewDto
+	 -->
+	<update id="updateReview" parameterType="apartmentReviewDto">
+		update apartmentreview set 
+		subject=#{subject}, content=#{content}, 
+		date=now(), star1 = #{star1} 
+		where id=#{id};
+	</update>
+	
+</mapper>

@@ -15,7 +15,7 @@ select hd.no, hd.dealAmount, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area
 select no, dealAmount, dealYear, dealMonth, dealDay, area, floor, cancelDealType, aptCode
 from housedeal
 where aptCode='11110000000002'
-order by dealYear, dealMonth;
+order by dealYear desc;
 
 -- select * from houseinfo limit 1,10;
 -- select * from housedeal limit 1,10;
@@ -42,6 +42,39 @@ select aptCode, buildYear,
 		apartmentName, lng, lat 
 		from houseinfo
 		where dong like concat('%', '사직', '%');
+        
+# 아이디 중복체크
+select count(*) from members
+where user_id='myid';
+
+# apartmentreview table 생성
+-- -----------------------------------------------------
+-- Table `myhome`.`apartmentreview`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `myhome`.`apartmentreview` (
+  `id` INT NOT NULL,
+  `aptCode` BIGINT NOT NULL,
+  `user_id` VARCHAR(16) NOT NULL,
+  `subject` VARCHAR(45) NOT NULL,
+  `content` VARCHAR(45) NOT NULL,
+  `star1` VARCHAR(45) NOT NULL,
+  `star2` VARCHAR(45) NULL,
+  `star3` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_apartmentreview_houseinfo_idx` (`aptCode` ASC) VISIBLE,
+  INDEX `fk_apartmentreview_members1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_apartmentreview_houseinfo`
+    FOREIGN KEY (`aptCode`)
+    REFERENCES `myhome`.`houseinfo` (`aptCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_apartmentreview_members1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `myhome`.`members` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
 
 

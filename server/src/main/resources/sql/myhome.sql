@@ -60,6 +60,32 @@ AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+DROP TABLE IF EXISTS `myhome`.`apartmentreview` ;
+
+CREATE TABLE IF NOT EXISTS `myhome`.`apartmentreview` (
+  `id` INT NOT NULL,
+  `aptCode` BIGINT NOT NULL,
+  `user_id` VARCHAR(16) NOT NULL,
+  `subject` VARCHAR(45) NOT NULL,
+  `content` VARCHAR(45) NOT NULL,
+  `star1` VARCHAR(45) NOT NULL,
+  `star2` VARCHAR(45) NULL,
+  `star3` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_apartmentreview_houseinfo_idx` (`aptCode` ASC) VISIBLE,
+  INDEX `fk_apartmentreview_members1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_apartmentreview_houseinfo`
+    FOREIGN KEY (`aptCode`)
+    REFERENCES `myhome`.`houseinfo` (`aptCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_apartmentreview_members1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `myhome`.`members` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
     
 commit;

@@ -45,7 +45,60 @@ select aptCode, buildYear,
         
 # 아이디 중복체크
 select count(*) from members
-where userId='ssafy';
+where user_id='myid';
+
+# apartmentreview table 생성
+-- -----------------------------------------------------
+-- Table `mydb`.`apartmentreview`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `apartmentreview`;
+
+CREATE TABLE IF NOT EXISTS `myhome`.`apartmentreview` (
+  `id` INT NOT NULL auto_increment,
+  `aptCode` BIGINT NOT NULL,
+  `user_id` VARCHAR(16) NOT NULL,
+  `subject` VARCHAR(45) NOT NULL,
+  `content` VARCHAR(45) NOT NULL,
+  `star1` VARCHAR(45) NOT NULL,
+  `star2` VARCHAR(45) NULL,
+  `star3` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_apartmentreview_houseinfo_idx` (`aptCode` ASC) VISIBLE,
+  INDEX `fk_apartmentreview_members1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_apartmentreview_houseinfo`
+    FOREIGN KEY (`aptCode`)
+    REFERENCES `myhome`.`houseinfo` (`aptCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_apartmentreview_members1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `myhome`.`members` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+ALTER TABLE apartmentreview
+modify COLUMN subject varchar(512);
+
+desc apartmentreview;
+select * from apartmentreview;
+
+select * from houseinfo limit 0,10;
+select * from members;
+
+# 아파트리뷰 입력
+insert into 
+apartmentreview (aptCode, user_id, subject, content, star1) 
+values('11110000000001', 'ssafy', '리뷰테스트제목','리뷰테스트내용','5');
+
+# 아파트리뷰 update
+update apartmentreview set subject='리뷰테스트제목2', content='리뷰테스트내용2', star1 = '1' where id='1';
+
+# 아파트리뷰 삭제
+delete from apartmentreview where id='2';
+
+# 아파트리뷰 아파트코드별 검색
+select id, aptCode, user_id, subject, content, star1 from apartmentreview where aptCode='11110000000001';
 
 
 

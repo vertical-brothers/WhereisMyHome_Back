@@ -57,8 +57,4 @@ public class StarDto {
 		return "StarDto [starNo=" + starNo + ", dongCode=" + dongCode + ", dealYM=" + dealYM + ", sidoName=" + sidoName
 				+ ", gugunName=" + gugunName + ", dongName=" + dongName + ", userId=" + userId + "]";
 	}
-	
-	
-	
-
 }

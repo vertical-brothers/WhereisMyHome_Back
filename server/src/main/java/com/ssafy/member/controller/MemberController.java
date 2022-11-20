@@ -131,7 +131,6 @@ public class MemberController {
 	@ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).") MemberDto memberDto) {
-		logger.debug("들어오는지 까지만 확");
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		try {

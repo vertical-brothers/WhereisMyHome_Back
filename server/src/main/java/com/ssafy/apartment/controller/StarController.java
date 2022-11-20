@@ -111,7 +111,7 @@ public class StarController {
 //	}
 	
 	/*
-	 * 2022-11-2 이인재
+	 * 2022-11-20 이인재
 	 * 관심지역 추가 Api
 	 * header로 access-token을 주면 됩니다.
 	 * pathvariable타입의 변수를 주기 때문에 url에 dongcode를 넘겨주어야 합니다
@@ -145,6 +145,46 @@ public class StarController {
 			result.put("error", e.getMessage());
 			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	
+	/*
+	 * 2022-11-20 이인재
+	 * 관심지역 삭 Api
+	 * header로 access-token을 주면 됩니다.
+	 * RequestBody타입의 변수를 주기 때문에 json타입의 body를 넘겨주어야 합니다.
+	 * 예시)
+	 * http://localhost:8080/whereismyhome/star
+	 * */
+	@DeleteMapping
+	@ResponseBody
+	@ApiOperation(value = "관심지역 삭제", notes = "해당 관심지을 삭제합니다.", response = Map.class)
+	private ResponseEntity<Map<String, Object>> deleteStar(@RequestBody Map<String, String> body, @RequestHeader("access-token") final String header) throws Exception{
+		// 토큰값 가져오기
+		Map<String, Object> tokenValue = jwtService.get(header);
+		// body에서 관심지역번호 가져오기
+		int starNo = Integer.parseInt(body.get("starno"));
+		MemberDto memberDto = memberService.getMember(tokenValue.get("userid").toString());
+		
+		logger.debug("ApartmentController  ! deletestar {}", starNo);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		if(memberDto != null) {
+			try {			
+				starService.deleteStar(starNo);
+				result.put("message", SUCCESS);
+				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+			} catch (Exception e) {
+				result.put("message", FAIL);
+				result.put("error", e.getMessage());
+				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} else {
+			result.put("message", FAIL);
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.CONFLICT);
+		}
+		
 	}
 	
 	@PostMapping(value = "/log/{aptCode}")

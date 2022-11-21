@@ -93,7 +93,7 @@ public class ApartmentReviewController {
 	 * 
 	 * */
 	@ApiOperation(value = "아파트 리뷰 작성", notes = "아파트 리뷰정보 작성 API", response = List.class)
-	@PostMapping(value="/")
+	@PostMapping
 	private ResponseEntity<String> writeReview(@RequestBody ApartmentReviewDto dto) throws Exception {
 		logger.debug("write Review call, dto : {}", dto);
 		try {
@@ -112,7 +112,7 @@ public class ApartmentReviewController {
 	 * 
 	 * */
 	@ApiOperation(value = "아파트 리뷰 수정", notes = "아파트 리뷰정보 수정 API", response = List.class)
-	@PutMapping(value="/")
+	@PutMapping
 	private ResponseEntity<String> updateReview(@RequestBody ApartmentReviewDto dto) throws Exception {
 		logger.debug("update Review call, dto : {}", dto);
 		try {

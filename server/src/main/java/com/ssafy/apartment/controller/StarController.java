@@ -61,24 +61,21 @@ public class StarController {
 	 * 예시)
 	 * http://localhost:8080/whereismyhome/star/1111010100
 	 * */
-	@PostMapping("/{dong}")
+	@PostMapping()
 	@ApiOperation(value = "관심 지역추가", notes = "유저에게 해당 관심지역을 추가합니다.", response = Map.class)
-	private ResponseEntity<Map<String, Object>> addstar(@PathVariable String dong, @RequestHeader("access-token") final String header) {
+	private ResponseEntity<Map<String, Object>> addstar(@RequestBody StarDto starDto, @RequestHeader("access-token") final String header) {
 		// 토큰값 가져오기
 		Map<String, Object> tokenValue = jwtService.get(header);
 		Map<String, String> map = new HashMap<String, String>();
 	
 		// 토큰 값에서 userid만 가져오기
 		String userId = tokenValue.get("userid").toString();
-		map.put("userId", userId);
-		map.put("dongCode", dong);
-		map.put("dealYM", "");
 		logger.debug("ApartmentController ! addstar {} ", map);
 		
 		Map<String, Object> result = new HashMap<>();
 				
 		try {
-			starService.addStar(map);
+			starService.addStar(starDto);
 			result.put("message", SUCCESS);
 			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 		} catch (Exception e) {
@@ -100,6 +97,7 @@ public class StarController {
 		if(userId != null) {
 			List<StarDto> list = starService.listStar(userId);
 			logger.debug("{}", list.size());
+			logger.debug("{}", list.get(0).toString());
 			return new ResponseEntity<List<StarDto>>(list, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<StarDto>>(HttpStatus.UNAUTHORIZED);
@@ -114,13 +112,16 @@ public class StarController {
 	 * 예시)
 	 * http://localhost:8080/whereismyhome/star
 	 * */
-	@DeleteMapping
+	@DeleteMapping("/{starno}")
 	@ApiOperation(value = "관심지역 삭제", notes = "해당 관심지을 삭제합니다.", response = Map.class)
-	private ResponseEntity<Map<String, Object>> deleteStar(@RequestBody Map<String, String> body, @RequestHeader("access-token") final String header) throws Exception{
+	private ResponseEntity<Map<String, Object>> deleteStar(@PathVariable String starno, @RequestHeader("access-token") final String header) throws Exception{
+		
+		// 관심지역삭제 시작
+		logger.debug("start delete star {} ",starno);
 		// 토큰값 가져오기
 		Map<String, Object> tokenValue = jwtService.get(header);
 		// body에서 관심지역번호 가져오기
-		int starNo = Integer.parseInt(body.get("starno"));
+		int starNo = Integer.parseInt(starno);
 		MemberDto memberDto = memberService.getMember(tokenValue.get("userid").toString());
 		
 		logger.debug("ApartmentController  ! deletestar {}", starNo);

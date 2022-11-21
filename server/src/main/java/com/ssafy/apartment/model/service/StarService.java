@@ -7,8 +7,8 @@ import com.ssafy.apartment.model.StarDto;
 
 public interface StarService {
 
-	void addStar(Map<String, String> map) throws Exception;
-	List<StarDto> listStar(String userid) throws Exception;
+	void addStar(StarDto starDto) throws Exception;
+	List<StarDto> listStar(String userId) throws Exception;
 	void deleteStar(int starNo) throws Exception;
 	
 	/* 로그 수집 관련 service */

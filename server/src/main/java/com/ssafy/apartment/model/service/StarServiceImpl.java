@@ -22,13 +22,13 @@ public class StarServiceImpl implements StarService {
 	}
 	@Override
 	@Transactional
-	public void addStar(Map<String, String> map) throws Exception {
-		apartmentMapper.addStar(map);
+	public void addStar(StarDto starDto) throws Exception {
+		apartmentMapper.addStar(starDto);
 	}
 
 	@Override
-	public List<StarDto> listStar(String userid) throws Exception {
-		return apartmentMapper.listStar(userid);
+	public List<StarDto> listStar(String userId) throws Exception {
+		return apartmentMapper.listStar(userId);
 	}
 
 	@Override

@@ -1,0 +1,16 @@
+drop table star;
+
+CREATE TABLE IF NOT EXISTS `myhome`.`star` (
+  `starno` INT NOT NULL AUTO_INCREMENT,
+  `user_id` VARCHAR(16) NULL DEFAULT NULL,
+  `apt_code` VARCHAR(16) NULL DEFAULT NULL,
+  `road_name` VARCHAR(40) NULL DEFAULT NULL,
+  `dong` VARCHAR(40) NULL DEFAULT NULL,
+  `apartment_name` VARCHAR(40) NULL DEFAULT NULL,
+  `lng` varchar(30) NULL DEFAULT NULL,
+  `lat` varchar(30) NULL DEFAULT NULL,  
+  PRIMARY KEY (`starno`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;

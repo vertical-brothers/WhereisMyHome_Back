@@ -6,24 +6,31 @@
 
 	<resultMap type="starDto" id="star">
 		<result column="star_no" property="starNo"/>
-		<result column="dongCode" property="dongCode"/>
-		<result column="dealYM" property="dealYM"/>
 		<result column="user_id" property="userId"/>
-		<result column="sidoName" property="sidoName"/>
-		<result column="gugunName" property="gugunName"/>
-		<result column="dongName" property="dongName"/>
+		<result column="apt_code" property="aptCode"/>
+		<result column="dong" property="dong"/>
+		<result column="road_name" property="roadName"/>
+		<result column="apartment_name" property="apartmentName"/>
+		<result column="lng" property="lng"/>
+		<result column="lat" property="lat"/>
 	</resultMap>
-	
+<!-- 	
 	<select id="listStar" parameterType="String" resultMap="star">
 		select s.star_no, d.dongCode, s.dealYM, s.user_id, d.sidoName, d.gugunName, d.dongName
 		from dongcode d join star s
 		on d.dongCode = s.dongCode
 		where s.user_id = #{userId}
 	</select>
+	 -->
+	<select id="listStar" parameterType="String" resultMap="star">
+		select s.starno, s.user_id, s.apt_code, s.dong, s.road_name, s.apartment_name, s.lng, s.lat
+		from star s
+		where s.user_id = #{userId}
+	</select>
 	
-	<insert id="addStar" parameterType="map">
-	insert into star (user_id, dongCode, dealYM)
-	values(#{userId},#{dongCode},#{dealYM})
+	<insert id="addStar" parameterType="starDto">
+	insert into star (user_id, apt_code, road_name, dong, apartment_name, lng, lat)
+	values(#{userId},#{aptCode},#{roadName}, #{dong}, #{apartmentName}, #{lng}, #{lat})
 	</insert>
 	
 	<delete id="deleteStar" parameterType="int">

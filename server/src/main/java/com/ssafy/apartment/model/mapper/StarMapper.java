@@ -11,7 +11,12 @@ import com.ssafy.apartment.model.StarDto;
 @Mapper
 public interface StarMapper {
 	
-	void addStar(Map<String, String> map) throws SQLException;
+//	void addStar(Map<String, String> map) throws SQLException;
+//	List<StarDto> listStar(String userId) throws SQLException;
+//	void deleteStar(int starNo) throws SQLException;
+	
+	
+	void addStar(StarDto starDto) throws SQLException;
 	List<StarDto> listStar(String userId) throws SQLException;
 	void deleteStar(int starNo) throws SQLException;
 	void addLog(String aptCode) throws SQLException;

@@ -18,7 +18,7 @@ public interface BoardService {
 	void modifyArticle(BoardDto boardDto) throws Exception;
 	void deleteArticle(int articleNo) throws Exception;
 	int totalArticleCount(Map<String, String> map) throws Exception;
-	 int getTotalCount(BoardParameterDto boardParameterDto) throws Exception;
+	int getTotalCount(BoardParameterDto boardParameterDto) throws Exception;
 	
 
 }

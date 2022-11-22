@@ -90,6 +90,12 @@ public class StarDto {
 
 	public StarDto() {
 	}
+
+	@Override
+	public String toString() {
+		return "StarDto [starNo=" + starNo + ", userId=" + userId + ", aptCode=" + aptCode + ", roadName=" + roadName
+				+ ", dong=" + dong + ", apartmentName=" + apartmentName + ", lng=" + lng + ", lat=" + lat + "]";
+	}
 	
 	
 }

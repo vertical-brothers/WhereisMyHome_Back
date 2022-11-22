@@ -41,5 +41,10 @@ public class StarServiceImpl implements StarService {
 		apartmentMapper.addLog(aptCode);
 	}
 	
+	@Override
+	public StarDto getStar(StarDto starDto) throws Exception {
+		return apartmentMapper.getStar(starDto);
+	}
+	
 	
 }

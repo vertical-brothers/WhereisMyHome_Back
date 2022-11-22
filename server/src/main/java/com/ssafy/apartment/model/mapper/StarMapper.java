@@ -20,4 +20,5 @@ public interface StarMapper {
 	List<StarDto> listStar(String userId) throws SQLException;
 	void deleteStar(int starNo) throws SQLException;
 	void addLog(String aptCode) throws SQLException;
+	StarDto getStar(StarDto starDto) throws SQLException;
 }

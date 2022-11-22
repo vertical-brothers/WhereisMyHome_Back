@@ -26,12 +26,22 @@
 	</sql>
 
 	<select id="listArticle" parameterType="map" resultMap="article">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
-		from board b, members m 
-		where b.user_id = m.user_id
-		<include refid="search"></include>
-		order by b.article_no desc
-		limit #{start}, #{listsize}
+		select article_no, user_id, subject, content, hit,
+				case when date_format(register_time, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(register_time, '%H:%i:%s')
+				else date_format(register_time, '%y.%m.%d')
+				end register_time
+		from board
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				where subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				where ${key} = #{word}
+			</if>
+		</if>
+		order by article_no desc
+		limit #{start}, #{spp}
 	</select>
 	
 	<select id="getArticle" parameterType="int" resultMap="article">
@@ -74,4 +84,16 @@
 		where article_no = #{articleNo}
 	</update>
 	
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from board
+		<if test="word != null and word != ''">	
+			<if test="key == 'subject'">
+				where subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				where ${key} = #{word}
+			</if>
+		</if>
+	</select>
 </mapper>

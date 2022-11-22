@@ -5,7 +5,7 @@
 <mapper namespace="com.ssafy.apartment.model.mapper.StarMapper">
 
 	<resultMap type="starDto" id="star">
-		<result column="star_no" property="starNo"/>
+		<result column="starno" property="starNo"/>
 		<result column="user_id" property="userId"/>
 		<result column="apt_code" property="aptCode"/>
 		<result column="dong" property="dong"/>

@@ -1,5 +1,6 @@
 package com.ssafy.board.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ssafy.board.model.BoardDto;
+import com.ssafy.board.model.BoardParameterDto;
 import com.ssafy.board.model.service.BoardService;
 import com.ssafy.util.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/board")
@@ -50,37 +53,51 @@ public class BoardController {
 		this.boardService = boardService;
 	}
 
+//	@ApiOperation(value = "게시판 글목록", notes = "모든 게시글의 정보를 반환한다.", response = List.class)
+//	@GetMapping(value="/")
+//	private ResponseEntity<List<BoardDto>> list(@RequestParam Map<String, String> map) throws Exception {
+//		logger.debug("debug msg board getmapping {}", map);
+//		
+//		if(map.get("key") == null) map.put("key", "");
+//		if(map.get("word") == null) map.put("word", "");
+//		List<BoardDto> list = boardService.listArticle(map);
+//		logger.debug(list.toString());
+//		logger.debug(Arrays.toString(list.toArray()));
+//		int articlecnt = boardService.totalArticleCount(map);
+//
+//		int spl = SizeConstant.SIZE_PER_LIST;
+//		int pl = SizeConstant.LIST_SIZE;
+//
+//		int pageno = Integer.parseInt(map.get("pgno"));
+//
+//		int startpage = (pageno - 1) / 10 * pl + 1;
+//
+//		int endpage = startpage + 9;
+//		int lastpage = articlecnt / spl + 1;
+//
+//		map.put("start", pageno+"");
+//		map.put("end", endpage+"");
+//	// 33-20 < 10
+//	if (articlecnt - spl * startpage < spl * pl) { // 전체 개수-현재페이지까지 개수가 지정된 페이지 수 보다 작으면
+//			endpage = articlecnt / spl + 1;
+//	}
+//
+//	ResponseEntity<List<BoardDto>> result = ResponseEntity.ok().body(list);
+//		return result;
+//
+//	}
 	@ApiOperation(value = "게시판 글목록", notes = "모든 게시글의 정보를 반환한다.", response = List.class)
-	@GetMapping(value="/")
-	private ResponseEntity<List<BoardDto>> list(@RequestParam Map<String, String> map) throws Exception {
-		logger.debug("debug msg board getmapping {}", map);
-		
-		if(map.get("key") == null) map.put("key", "");
-		if(map.get("word") == null) map.put("word", "");
-		List<BoardDto> list = boardService.listArticle(map);
-		logger.debug(list.toString());
-	int articlecnt = boardService.totalArticleCount(map);
-
-		int spl = SizeConstant.SIZE_PER_LIST;
-	int pl = SizeConstant.LIST_SIZE;
-
-		int pageno = Integer.parseInt(map.get("pgno"));
-
-		int startpage = (pageno - 1) / 10 * pl + 1;
-
-		int endpage = startpage + 9;
-	int lastpage = articlecnt / spl + 1;
-
-	// 33-20 < 10
-	if (articlecnt - spl * startpage < spl * pl) { // 전체 개수-현재페이지까지 개수가 지정된 페이지 수 보다 작으면
-			endpage = articlecnt / spl + 1;
+	@GetMapping
+	public ResponseEntity<List<BoardDto>> listArticle(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) BoardParameterDto boardParameterDto) throws Exception {
+		logger.info("listArticle - 호출");
+		return new ResponseEntity<List<BoardDto>>(boardService.listArticle(boardParameterDto), HttpStatus.OK);
 	}
-
-	ResponseEntity<List<BoardDto>> result = ResponseEntity.ok().body(list);
-		return result;
-
+	
+	@GetMapping("/total")
+	public ResponseEntity<Integer> totalArticleCount(@ApiParam(value = "게시글 개수를 가져오는 api", required = true) @RequestParam Map<String, String> map ) throws Exception {
+		logger.info("totalArticleCount - 호출");
+		return new ResponseEntity<Integer>(boardService.totalArticleCount(map), HttpStatus.OK);
 	}
-
 //	@PostMapping("/write")
 //	private String write(BoardDto boardDto, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
 ////		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");

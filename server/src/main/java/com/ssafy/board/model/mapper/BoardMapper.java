@@ -1,19 +1,24 @@
 package com.ssafy.board.model.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.board.model.BoardDto;
+import com.ssafy.board.model.BoardParameterDto;
 
 @Mapper
 public interface BoardMapper {
-	List<BoardDto> listArticle(Map<String, Object> map) throws Exception;
+//	List<BoardDto> listArticle(Map<String, Object> map) throws Exception;
+	public List<BoardDto> listArticle(BoardParameterDto boardParameterDto) throws SQLException;
 	BoardDto getArticle(int articleNo) throws Exception;
 	void writeArticle(BoardDto board) throws Exception;
 	void modifyArticle(BoardDto board) throws Exception;
 	void deleteArticle(int articleNo) throws Exception;
 	int totalArticleCount(Map<String, String> map) throws Exception;
 	void updateHit(int articleNo) throws Exception;
+	int getTotalCount(BoardParameterDto boardParameterDto);
+
 }

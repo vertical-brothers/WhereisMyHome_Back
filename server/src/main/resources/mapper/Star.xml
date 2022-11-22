@@ -5,7 +5,7 @@
 <mapper namespace="com.ssafy.apartment.model.mapper.StarMapper">
 
 	<resultMap type="starDto" id="star">
-		<result column="star_no" property="starNo"/>
+		<result column="starno" property="starNo"/>
 		<result column="user_id" property="userId"/>
 		<result column="apt_code" property="aptCode"/>
 		<result column="dong" property="dong"/>
@@ -27,15 +27,31 @@
 		from star s
 		where s.user_id = #{userId}
 	</select>
+
+	<!-- 
+	아파트코드 / 유저ID로 검색
+	이미 star된 아파트인지 검색
 	
+	22.11.22 장한결	
+	 -->	
+	<select id="getStar" parameterType="starDto" resultMap="star">
+		select s.starno, s.user_id, s.apt_code, s.dong, s.road_name, s.apartment_name, s.lng, s.lat
+		from star s
+		where s.user_id=#{userId} 
+		and s.apt_code=#{aptCode}
+	</select>
+
 	<insert id="addStar" parameterType="starDto">
 	insert into star (user_id, apt_code, road_name, dong, apartment_name, lng, lat)
 	values(#{userId},#{aptCode},#{roadName}, #{dong}, #{apartmentName}, #{lng}, #{lat})
+	<selectKey keyProperty="starNo" resultType="Integer">
+    	SELECT LAST_INSERT_ID()
+  	</selectKey>
 	</insert>
 	
 	<delete id="deleteStar" parameterType="int">
 	delete from star
-	where star_no=#{starNo}
+	where starno=#{starNo}
 	</delete>
 	
 	<insert id="addLog" parameterType="String">

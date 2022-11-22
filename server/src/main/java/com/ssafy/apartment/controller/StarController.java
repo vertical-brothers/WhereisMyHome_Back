@@ -70,6 +70,7 @@ public class StarController {
 	
 		// 토큰 값에서 userid만 가져오기
 		String userId = tokenValue.get("userid").toString();
+		starDto.setUserId(userId);
 		logger.debug("ApartmentController ! addstar {} ", map);
 		
 		Map<String, Object> result = new HashMap<>();
@@ -77,6 +78,7 @@ public class StarController {
 		try {
 			starService.addStar(starDto);
 			result.put("message", SUCCESS);
+			result.put("starNo", starDto.getStarNo());
 			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,8 +98,7 @@ public class StarController {
 		
 		if(userId != null) {
 			List<StarDto> list = starService.listStar(userId);
-			logger.debug("{}", list.size());
-			logger.debug("{}", list.get(0).toString());
+			logger.debug("getStar(관심지역 조회) call : {}", list);
 			return new ResponseEntity<List<StarDto>>(list, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<StarDto>>(HttpStatus.UNAUTHORIZED);
@@ -145,12 +146,37 @@ public class StarController {
 		
 	}
 	
+	@GetMapping(value="/check/{aptCode}")
+	@ApiOperation(value = "관심지역 기 추가여부 확인", notes = "관심지역이 이미 등록되었는지 확인하고, star객체를 반환합니다..", response = StarDto.class)
+	private ResponseEntity<Map<String, Object>> checkstar(@PathVariable String aptCode, @RequestHeader("access-token") final String header) throws Exception{
+		
+		Map<String, Object> tokenValue = jwtService.get(header);
+		String userId = tokenValue.get("userid").toString();
+		logger.debug("ApartmentController  ! checkstar {} {}",aptCode, userId);
+		StarDto starDto = new StarDto();
+		starDto.setAptCode(aptCode);
+		starDto.setUserId(userId);
+		Map<String, Object> result = new HashMap<>();
+		try {
+			StarDto star = starService.getStar(starDto);
+			result.put("message", SUCCESS);
+			result.put("star", star);
+			logger.debug("ApartmentController  ! checkstar {}",star);
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.put("message", FAIL);
+			result.put("error", e.getMessage());
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@PostMapping(value = "/log/{aptCode}")
 	@ApiOperation(value = "로그 저장", notes = "로그를 수집합니다.", response = Void.class)
 	private ResponseEntity<Void> addLog(@PathVariable String aptCode) throws Exception{
 		starService.addLog(aptCode);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

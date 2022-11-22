@@ -63,7 +63,7 @@ public class StarController {
 	 * */
 	@PostMapping()
 	@ApiOperation(value = "관심 지역추가", notes = "유저에게 해당 관심지역을 추가합니다.", response = Map.class)
-	private ResponseEntity<Map<String, Object>> addstar(@RequestBody StarDto starDto, @RequestHeader("access-token") final String header) {
+	private ResponseEntity<Map<String, Object>> addStar(@RequestBody StarDto starDto, @RequestHeader("access-token") final String header) {
 		// 토큰값 가져오기
 		Map<String, Object> tokenValue = jwtService.get(header);
 		Map<String, String> map = new HashMap<String, String>();
@@ -97,7 +97,7 @@ public class StarController {
 		if(userId != null) {
 			List<StarDto> list = starService.listStar(userId);
 			logger.debug("{}", list.size());
-			logger.debug("{}", list.get(0).toString());
+			logger.debug("{}", list.get(0).getStarNo());
 			return new ResponseEntity<List<StarDto>>(list, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<StarDto>>(HttpStatus.UNAUTHORIZED);

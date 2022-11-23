@@ -41,4 +41,10 @@ public class ApartmentReviewServiceImpl implements ApartmentReviewService {
 		apartmentReviewMapper.deleteReview(id);
 	}
 
+	@Override
+	public List<ApartmentReviewDto> showRecentReview(int limit) throws SQLException {
+		// TODO Auto-generated method stub
+		return apartmentReviewMapper.showRecentReview(limit);
+	}
+
 }

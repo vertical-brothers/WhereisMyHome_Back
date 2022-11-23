@@ -24,6 +24,17 @@
 			</if>
 		</if>
 	</sql> -->
+	
+	<!-- 최신 아파트 리뷰 parameter 개
+	input : count
+	output : review List
+	 -->
+	<select id="showRecentReview" parameterType="int" resultMap="review">
+		select id, aptCode, user_id, 
+		subject, content, 
+		date,star1 from apartmentreview 
+		order by date desc limit #{limit}
+	</select>
 
 	<!-- 아파트 코드별 리뷰 검색.
 	input : aptCode
@@ -33,7 +44,8 @@
 		select id, aptCode, user_id, 
 		subject, content, 
 		date,star1 from apartmentreview 
-		where aptCode=#{aptCode};
+		where aptCode=#{aptCode}
+		order by date desc
 	</select>
 	<!-- 아파트 리뷰 작성.
 	input : apartmentReviewDto

@@ -65,7 +65,7 @@ public class HouseController {
 	 * return
 	 * HouseDto
 	 * */
-	@ApiOperation(value = "아파트 코드로 찾기", notes = "아파트 코드로 아파트 정보 호출.", response = List.class)
+	@ApiOperation(value = "아파트 코드로 찾기", notes = "아파트 코드로 아파트 정보 호출.", response = HouseDto.class)
 	@GetMapping(value="/code/{aptCode}")
 	private ResponseEntity<HouseDto> searchByAptcode(@PathVariable String aptCode) throws Exception {
 		logger.debug("searchByAptcode call, aptCode : {}", aptCode);

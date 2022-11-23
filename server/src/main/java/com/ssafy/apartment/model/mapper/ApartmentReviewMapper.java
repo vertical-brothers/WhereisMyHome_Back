@@ -14,4 +14,5 @@ public interface ApartmentReviewMapper {
 	void writeReview(ApartmentReviewDto apartmentReviewDto) throws SQLException;
 	void updateReview(ApartmentReviewDto apartmentReviewDto) throws SQLException;
 	void deleteReview(String id) throws SQLException;
+	List<ApartmentReviewDto> showRecentReview(int limit) throws SQLException;
 }

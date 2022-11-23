@@ -123,6 +123,29 @@ public class ApartmentReviewController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	// 최신 아파트 리뷰 정보 조회
+	// 22.11.20 장한결
+	/*
+	 * argument
+	 * String : int (원하는 글 갯수)
+	 * 
+	 * return
+	 * HouseDto
+	 * */
+	@ApiOperation(value = "최신 아파트 리뷰 정보 조회", notes = "최신 아파트 리뷰 정보 조회, limit 개의 아파트 리뷰 정보만 나옴.", response = List.class)
+	@GetMapping(value="/recent/{limit}")
+	private ResponseEntity<List<ApartmentReviewDto>> recentReviewList(@PathVariable int limit) throws Exception {
+		logger.debug("recentReviewList(Review) call, limit : {}", limit);
+		List<ApartmentReviewDto> list = null;
+		try {
+			list = apartmentReviewService.showRecentReview(limit);
+			logger.debug("recentReviewList(Review) result, review list : {}", list);
+			return new ResponseEntity<List<ApartmentReviewDto>>(list, HttpStatus.OK);
+		} catch(Exception e) {
+			logger.debug("recentReviewList(Review) error, {}",e);
+			return new ResponseEntity<List<ApartmentReviewDto>>(list, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 
 }

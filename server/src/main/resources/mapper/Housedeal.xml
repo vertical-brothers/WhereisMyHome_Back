@@ -41,7 +41,7 @@
 		select no, dealAmount, dealYear, dealMonth, dealDay, area, floor, aptCode
 		from housedeal
 		where aptCode=#{aptCode}
-		order by dealYear;
+		order by dealYear desc;
 	</select>
 
 </mapper>

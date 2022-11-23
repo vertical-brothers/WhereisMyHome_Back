@@ -132,7 +132,9 @@ public class StarController {
 		if(memberDto != null) {
 			try {			
 				starService.deleteStar(starNo);
+				List<StarDto> list = starService.listStar(tokenValue.get("userid").toString());
 				result.put("message", SUCCESS);
+				result.put("stars", list);
 				return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 			} catch (Exception e) {
 				result.put("message", FAIL);

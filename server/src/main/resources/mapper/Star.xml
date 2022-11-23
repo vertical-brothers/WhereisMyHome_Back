@@ -58,4 +58,6 @@
 	insert into star_log (aptcode, log_date)
 	values (#{aptCode}, now())	
 	</insert>
+	
+	
 </mapper>

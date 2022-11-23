@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.apartment.model.StarDto;
+import com.ssafy.log.model.ApartLogDto;
 
 @Mapper
 public interface StarMapper {
@@ -19,6 +20,8 @@ public interface StarMapper {
 	void addStar(StarDto starDto) throws SQLException;
 	List<StarDto> listStar(String userId) throws SQLException;
 	void deleteStar(int starNo) throws SQLException;
-	void addLog(String aptCode) throws SQLException;
 	StarDto getStar(StarDto starDto) throws SQLException;
+	
+	void addLog(String aptCode) throws SQLException;
+	List<ApartLogDto> getLog() throws SQLException; 
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.loginLog.model.mapper.LoginLogMapper">
+
+	<insert id="addLoginLog">
+		insert into login_log (log_date) 
+		values(now());
+	</insert>
+	
+	<select id = "getLoginLog" resultType="int">
+		select count(*) as cnt 
+		from login_log 
+		where DATE(log_date) = DATE(NOW());
+	</select>
+</mapper>
+

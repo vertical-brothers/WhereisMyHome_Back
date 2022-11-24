@@ -12,5 +12,7 @@ public interface ApartLogMapper {
 
 	void addLog(String aptCode) throws SQLException;
 	List<ApartLogDto> getLog() throws SQLException;
+	void addLoginLog() throws SQLException;
+//	List<integer> getloginCount throws
 	
 }

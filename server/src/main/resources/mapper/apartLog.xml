@@ -6,7 +6,6 @@
 
 	<resultMap type="apartLogDto" id="apartLog">
 		<result column="aptcode" property="aptCode"/>
-		<result column="apartmentName" property="apartmentName"/>
 		<result column="cnt" property="cnt"/>
 	</resultMap>
 
@@ -15,15 +14,6 @@
 		values (#{aptCode}, now())	
 	</insert>
 	
-<!-- 	<select id = "getLog" resultMap="apartLog">
-		select aptcode, count(*) as cnt 
-		from star_log 
-		WHERE log_date 
-		BETWEEN DATE_ADD(NOW(),INTERVAL -1 WEEK ) AND NOW() 
-		group by aptcode 
-		order by cnt desc 
-		limit 3;
-	</select> -->
 	<select id = "getLog" resultMap="apartLog">
 		select l.aptcode, (select apartmentName from houseinfo where aptcode=l.aptcode) as apartmentName, count(*) as cnt 
 		from star_log l

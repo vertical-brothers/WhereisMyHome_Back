@@ -2,6 +2,7 @@ package com.ssafy.member.controller;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLEngineResult.Status;
@@ -210,14 +211,11 @@ public class MemberController {
 	
 	
 	@ApiOperation(value = "회원 리스트 반환", notes = "회원 리스트를 반환한다.")
-	@GetMapping()
-	public String list(Model model) {
-		try {
-			model.addAttribute("users",memberService.listMember());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "/user/list";
+	@GetMapping
+	public ResponseEntity<List<MemberDto>> getlist() throws Exception {
+		logger.debug("list 반환 메서드 호출 ===================>");
+		List<MemberDto> list = memberService.listMember();
+		return new ResponseEntity<List<MemberDto>> (list, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "회원인증", notes = "회원 정보를 담은 Token을 반환한다.", response = Map.class)
@@ -248,23 +246,6 @@ public class MemberController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-	
-//	@PostMapping("/update")
-//	public String update(@ModelAttribute MemberDto member, Model model, HttpSession session) {		
-//		try {
-//			logger.debug("update : {}", member);
-//			memberService.updateMember(member);
-//			logger.debug("memberDto info : {}", member);
-//			return "redirect:/user/info";
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			model.addAttribute("msg", "회원 정보 수정 중 문제 발생!!!");
-//			return "error/error";
-//		}
-//	}
-	
-	
-
 	
 	@GetMapping("/token/{userid}")
 	public ResponseEntity<Map<String, Object>> checkToken(@RequestHeader("Authorization") final String header, 

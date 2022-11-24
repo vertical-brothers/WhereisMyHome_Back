@@ -4,7 +4,7 @@ package com.ssafy.member.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-
+import javax.net.ssl.SSLEngineResult.Status;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -285,5 +285,17 @@ public class MemberController {
 			resultMap.put("message", FAIL);
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
 		}
+	}
+	
+	@ApiOperation(value = "유저 수 조회", notes ="사용자 count API")
+	@GetMapping("/count")
+	public ResponseEntity<Integer> countUser() throws Exception {		
+		logger.debug("count User 진입 ========>");
+		Map<String, Object> resultMap = new HashMap<>();
+//		boolean flag = jwtService.checkToken(header);		
+		
+		int count = memberService.listMember().size();
+		
+		return new ResponseEntity<Integer>(count, HttpStatus.OK);
 	}
 }

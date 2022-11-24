@@ -73,7 +73,7 @@ public class LogController {
 	 * 
 	 * */
 	@PostMapping(value = "/apartSearchLog")
-	@ApiOperation(value="키워드 검색 기록 저장", notes = "아파트 / 동별 키워드 검색 기록을 수집합니다.", response = String.class)
+	@ApiOperation(value="키워드 검색 기록 저장", notes = "아파트 / 동별 키워드 검색 기록을 수집합니다.", response = ApartSearchLogDto.class)
 	private ResponseEntity<String> addApartSearchLog(@RequestBody ApartSearchLogDto apartSearchLogDto) throws Exception {
 		logger.debug("write apartsearchlog call, dto : {}", apartSearchLogDto);
 		try {

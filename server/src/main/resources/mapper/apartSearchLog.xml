@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.homeLog.model.mapper.ApartSearchLogMapper">
+
+	<resultMap type="apartSearchLogDto" id="apartLog">
+		<result column="log_id" property="log_id"/>
+		<result column="log_date" property="log_date"/>
+		<result column="catogory" property="category"/>
+		<result column="keyword" property="keyword"/>
+	</resultMap>
+	
+	<resultMap type="apartSearchLogResultDto" id="apartResultLog">
+		<result column="keyword" property="keyword"/>
+		<result column="catogory" property="category"/>
+		<result column="searchCount" property="searchCount"/>
+	</resultMap>
+
+	<insert id="addLog" parameterType="apartSearchLogDto">
+		INSERT INTO search_log(log_date,category,keyword) 
+		VALUES(now(),#{category}, #{keyword});
+	</insert>
+	
+	<select id="getAllLog" resultMap="apartResultLog">
+		select keyword, category ,count(*) as searchCount 
+		from search_log group by keyword order by searchCount desc;
+	</select>
+	
+	<select id="getTodayLog" resultMap="apartResultLog">
+		select keyword, category, count(*) as searchCount
+		from search_log 
+		where DATE(log_date) = DATE(NOW()) 
+		group by keyword 
+		order by searchCount desc;
+	</select>
+	
+	
+</mapper>
+

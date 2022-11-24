@@ -78,6 +78,36 @@ CREATE TABLE IF NOT EXISTS myhome.apartmentreview (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+# 검색 로그
+# log_id : 로그별 pk
+# log_date : 로깅된 날짜
+# category : 검색 카테고리
+# keyword : 검색 키워드
+
+DROP TABLE IF EXISTS search_log;
+
+CREATE TABLE IF NOT EXISTS `myhome`.`search_log` ( 
+  `log_id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `log_date` DATETIME(6) NOT NULL,
+  `category` varchar(2048) NOT NULL,
+  `keyword` varchar(2048) NOT NULL,
+  PRIMARY KEY(`log_id`, `log_date`),
+  INDEX `daily_log-log_id` (`log_id`)  
+) ENGINE=INNODB;
+
+INSERT INTO search_log(log_date,category,keyword) VALUES(now(),'dongName','광화');
+
+desc search_log;
+select * from search_log;
+
+# 로그 
+select keyword, category ,count(*) as searchCount from search_log group by keyword order by searchCount desc;
+
+select keyword, category, count(*) as searchCount from search_log where DATE(log_date) = DATE(NOW()) group by keyword order by searchCount desc;
+
+
+
+
 
 
 
